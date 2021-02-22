@@ -75,10 +75,6 @@ public:
 		versionByte = *reinterpret_cast<unsigned char*>(getOffset(0x1036));
 		if (!versionByte) return false;
 
-		char msg[64];
-		sprintf_s(msg, "version: %d", versionByte);
-		MessageBoxA(NULL, msg, "samp", MB_OK);
-
 		pOffsets = new COffsets(versionByte);
 		if (!pOffsets) return false;
 
