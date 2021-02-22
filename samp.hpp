@@ -1,7 +1,6 @@
 #pragma once
 
 #include <windows.h>
-#include <iostream>
 
 using CMDPROC = void(__cdecl* )(const char*);
 
