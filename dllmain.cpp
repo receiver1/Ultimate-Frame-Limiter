@@ -22,7 +22,7 @@ void CTimer__UpdateHooked()
 					samp.addChatMessage(0x1FD5EDFF, "<ufl> {FFFFFF}Frame Limiter: {1FD5ED}Disabled");
 					samp.setFrameLimiter(0);
 
-					// Выключаем ограничитель FPS
+					// Р’С‹РєР»СЋС‡Р°РµРј РѕРіСЂР°РЅРёС‡РёС‚РµР»СЊ FPS
 					if (frameLimit)
 						frameLimit = 0;
 				}
@@ -36,7 +36,7 @@ void CTimer__UpdateHooked()
 					samp.addChatMessage(0x1FD5EDFF, szMessage);
 					samp.setFrameLimiter(iParam);
 
-					// Включаем ограничитель FPS
+					// Р’РєР»СЋС‡Р°РµРј РѕРіСЂР°РЅРёС‡РёС‚РµР»СЊ FPS
 					if (!frameLimit) 
 						frameLimit = 1;
 				}
@@ -45,7 +45,7 @@ void CTimer__UpdateHooked()
 			isInitializated = true;
 		}
 	}
-	// Вызываем оригинальный CTimer::Update
+	// Р’С‹Р·С‹РІР°РµРј РѕСЂРёРіРёРЅР°Р»СЊРЅС‹Р№ CTimer::Update
 	reinterpret_cast<void(__cdecl*)()>(0x561B10)();
 }
 
@@ -54,13 +54,13 @@ class CEntry
 public:
 	CEntry()
 	{
-		// Подменяем вызов CTimer::Update на свой
+		// РџРѕРґРјРµРЅСЏРµРј РІС‹Р·РѕРІ CTimer::Update РЅР° СЃРІРѕР№
 		*reinterpret_cast<uint32_t*>(0x53E968 + 1) = 
 			reinterpret_cast<uint32_t>(&CTimer__UpdateHooked) - 0x53E968 - 5;
 	}
 	~CEntry()
 	{
-		// Подменяем свой вызов на CTimer::Update
+		// РџРѕРґРјРµРЅСЏРµРј СЃРІРѕР№ РІС‹Р·РѕРІ РЅР° CTimer::Update
 		//*reinterpret_cast<uint32_t*>(0x53E968 + 1) =
 		//	*reinterpret_cast<uint32_t*>(0x561B10) - 0x53E968 - 5;
 	}
