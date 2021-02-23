@@ -2,6 +2,8 @@
 #include "samp.hpp"
 #include <thread>
 
+uint32_t originalAddress;
+
 void CTimer__UpdateHooked()
 {
 	static bool isInitializated{ false };
@@ -45,23 +47,35 @@ void CTimer__UpdateHooked()
 			isInitializated = true;
 		}
 	}
-	// Вызываем оригинальный CTimer::Update
-	reinterpret_cast<void(__cdecl*)()>(0x561B10)();
+	// Вызываем оригинальный CTimer::Update (0x561B10)
+	reinterpret_cast<void(__cdecl*)()>(originalAddress)();
 }
 
 class CEntry
 {
+	uint32_t hookAddress{ 0x53E968 },
+		&relativeAddress{ *reinterpret_cast<uint32_t*>(hookAddress + 1) };
+	unsigned long ulProtection;
 public:
 	CEntry()
 	{
+		VirtualProtect(LPVOID(hookAddress), 5, PAGE_READWRITE, &ulProtection);
+
+		// Сохраняем оригинал для совершения прыжка
+		originalAddress = relativeAddress + hookAddress + 5;
+
 		// Подменяем вызов CTimer::Update на свой
-		*reinterpret_cast<uint32_t*>(0x53E968 + 1) = 
-			reinterpret_cast<uint32_t>(&CTimer__UpdateHooked) - 0x53E968 - 5;
+		relativeAddress = reinterpret_cast<uint32_t>(&CTimer__UpdateHooked) - hookAddress - 5;
+
+		VirtualProtect(LPVOID(hookAddress), 5, ulProtection, &ulProtection);
 	}
 	~CEntry()
 	{
+		VirtualProtect(LPVOID(hookAddress), 5, PAGE_READWRITE, &ulProtection);
+
 		// Подменяем свой вызов на CTimer::Update
-		//*reinterpret_cast<uint32_t*>(0x53E968 + 1) =
-		//	*reinterpret_cast<uint32_t*>(0x561B10) - 0x53E968 - 5;
+		relativeAddress = *reinterpret_cast<uint32_t*>(originalAddress) - hookAddress - 5;
+
+		VirtualProtect(LPVOID(hookAddress), 5, ulProtection, &ulProtection);
 	}
 } entry;
