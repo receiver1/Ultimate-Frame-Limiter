@@ -1,6 +1,7 @@
 #pragma once
 
 #include <windows.h>
+#include <iostream>
 
 using CMDPROC = void(__cdecl* )(const char*);
 
@@ -47,6 +48,17 @@ public:
 
 				CGame = 0x26E8F4;
 				SetFrameLimiter = 0xA04A0;
+			} break;
+			case 0x60: // R4
+			{
+				CInput = 0x26E9FC;
+				RegisterChatCommand = 0x69730;
+
+				CChat = 0x26E9F8;
+				AddChatMessage = 0x68130;
+
+				CGame = 0x26EA24;
+				SetFrameLimiter = 0xA0BE0;
 			} break;
 		}
 	}
