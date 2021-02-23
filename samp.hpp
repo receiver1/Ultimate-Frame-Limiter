@@ -49,6 +49,7 @@ public:
 				CGame = 0x26E8F4;
 				SetFrameLimiter = 0xA04A0;
 			} break;
+			// Спасибо SR_team за адреса
 			case 0x60: // R4
 			{
 				CInput = 0x26E9FC;
